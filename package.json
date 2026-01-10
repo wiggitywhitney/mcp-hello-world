@@ -1,0 +1,32 @@
+{
+  "name": "mcp-hello-world",
+  "version": "1.0.0",
+  "description": "A hello world MCP (Model Context Protocol) project.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wiggitywhitney/mcp-hello-world.git"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wiggitywhitney/mcp-hello-world/issues"
+  },
+  "homepage": "https://github.com/wiggitywhitney/mcp-hello-world#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.6",
+    "typescript": "^5.9.3"
+  }
+}
