@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "hello-world": {
+      "command": "node",
+      "args": ["/Users/whitney.lee/Documents/Repositories/mcp-hello-world/dist/index.js"]
+    }
+  }
+}
