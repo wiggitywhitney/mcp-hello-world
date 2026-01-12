@@ -1,7 +1,7 @@
 # PRD: Polyglot MCP Tool with LangChain
 
 **Issue**: #1
-**Status**: Draft
+**Status**: In Progress
 **Created**: 2025-01-11
 **Last Updated**: 2025-01-11
 
@@ -117,7 +117,7 @@ server.tool(
 
 ## Milestones
 
-- [ ] LangChain dependencies installed and configured with Anthropic
+- [x] LangChain dependencies installed and configured with Anthropic
 - [ ] `polyglot` tool implemented with LangChain integration
 - [ ] Teller secrets management configured for this project
 - [ ] Code documented with comprehensive doc strings
@@ -170,3 +170,4 @@ Add a section pointing to the new tool and its documentation.
 | Date | Update |
 |------|--------|
 | 2025-01-11 | PRD created |
+| 2025-01-12 | Installed @langchain/anthropic and @langchain/core; added ChatAnthropic import to src/index.ts; verified TypeScript build |

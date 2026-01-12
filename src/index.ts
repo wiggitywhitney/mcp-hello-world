@@ -17,6 +17,19 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 /**
+ * LangChain imports for AI-powered tools.
+ *
+ * ChatAnthropic: The LangChain wrapper for Claude. It handles:
+ * - API authentication (uses ANTHROPIC_API_KEY env var)
+ * - Message formatting (converts LangChain messages to Anthropic format)
+ * - Response parsing (converts Anthropic responses back to LangChain format)
+ *
+ * This import validates that our LangChain setup is working correctly.
+ * The polyglot tool will use this to call Claude for language detection.
+ */
+import { ChatAnthropic } from "@langchain/anthropic";
+
+/**
  * Creates and configures the MCP server.
  *
  * The server is the central piece - it:
