@@ -70,12 +70,14 @@ The `.describe()` text helps Claude understand what to pass.
 import { ChatAnthropic } from "@langchain/anthropic";
 
 const model = new ChatAnthropic({
-  model: "claude-3-haiku-20240307",
+  model: "claude-haiku-4-5-20251001",
 });
 
 const response = await model.invoke("What is 2 + 2?");
 console.log(response.content); // "4"
 ```
+
+Note: Use specific model versions (with dates) in production for consistent behavior. The alias `claude-haiku-4-5` points to the latest snapshot but may change.
 
 **Where to create the instance?**
 

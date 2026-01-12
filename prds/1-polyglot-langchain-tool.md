@@ -108,15 +108,21 @@ Run with: `teller run -- npm start`
 ### Tool Definition
 
 ```typescript
-server.tool(
+server.registerTool(
   "polyglot",
-  "Responds to greetings in any language with 'world' in that same language",
-  { greeting: z.string().describe("A greeting in any language") },
+  {
+    description: "Responds to greetings in any language with 'world' in that same language",
+    inputSchema: {
+      greeting: z.string().describe("A greeting in any language"),
+    },
+  },
   async ({ greeting }) => {
     // LangChain call to detect language and respond
   }
 );
 ```
+
+Note: Uses `registerTool` (the current API) instead of the deprecated `tool()` method.
 
 ## Success Criteria
 

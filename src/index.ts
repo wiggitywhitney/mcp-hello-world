@@ -79,7 +79,7 @@ function createServer(): McpServer {
        * API key comes from ANTHROPIC_API_KEY env var (injected by Teller).
        */
       const model = new ChatAnthropic({
-        model: "claude-3-haiku-20240307",
+        model: "claude-haiku-4-5-20251001",
       });
 
       const prompt = `Given the greeting "${greeting}", reply with the word "world" in that language. One word only. Example: hello → world`;
