@@ -119,7 +119,7 @@ server.tool(
 
 - [x] LangChain dependencies installed and configured with Anthropic
 - [ ] `polyglot` tool implemented with LangChain integration
-- [ ] Teller secrets management configured for this project
+- [x] Teller secrets management configured for this project
 - [ ] Code documented with comprehensive doc strings
 - [ ] Standalone documentation created (`docs/langchain-polyglot-tool.md`)
 - [ ] Tool tested with various languages and greeting variations
@@ -171,3 +171,4 @@ Add a section pointing to the new tool and its documentation.
 |------|--------|
 | 2025-01-11 | PRD created |
 | 2025-01-12 | Installed @langchain/anthropic and @langchain/core; added ChatAnthropic import to src/index.ts; verified TypeScript build |
+| 2025-01-12 | Configured Teller secrets management (.teller.yml) to inject ANTHROPIC_API_KEY from Google Secrets Manager |

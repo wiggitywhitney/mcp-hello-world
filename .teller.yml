@@ -1,0 +1,10 @@
+project: mcp-hello-world
+providers:
+  google_secrets_manager:
+    kind: google_secretmanager
+    maps:
+      - id: secrets
+        path: projects/demoo-ooclock
+        keys:
+          # Anthropic API key for LangChain polyglot tool
+          anthropic-api-key: ANTHROPIC_API_KEY
