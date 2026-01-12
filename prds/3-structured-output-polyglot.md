@@ -85,14 +85,24 @@ LangChain's `.withStructuredOutput()`:
 - [ ] Zod schema validates the LLM response
 - [ ] Documentation updated to explain the structured output pattern
 - [ ] Existing greeting tests still work (verify with manual testing)
+- [ ] New standalone learning document created (`docs/structured-output.md`) covering the new concepts
 
 ## Milestones
 
-- [ ] **M1**: Define Zod schema for structured polyglot response
-- [ ] **M2**: Implement `.withStructuredOutput()` in polyglot handler
-- [ ] **M3**: Update MCP tool response to return formatted structured data
-- [ ] **M4**: Update documentation (README, langchain-polyglot-tool.md) with structured output explanation
-- [ ] **M5**: Manual testing with various greetings to verify structured responses
+- [ ] **M1**: Research latest LangChain structured output documentation and best practices (avoid outdated patterns)
+- [ ] **M2**: Define Zod schema for structured polyglot response
+- [ ] **M3**: Implement `.withStructuredOutput()` in polyglot handler
+- [ ] **M4**: Update MCP tool response to return formatted structured data
+- [ ] **M5**: Create new standalone learning document (`docs/structured-output.md`) - plain language, succinct, no overlap with existing docs
+- [ ] **M6**: Manual testing with various greetings to verify structured responses
+
+## Learning Document Requirements
+
+The new `docs/structured-output.md` must:
+- **Be a new file**: Do not edit existing documents - create a standalone file for this feature
+- **Use plain language**: No jargon, zero assumptions about prior knowledge
+- **Be succinct**: Explain concepts clearly without unnecessary verbosity
+- **Not overlap**: Don't repeat material from `langchain-polyglot-tool.md` - focus only on structured output concepts
 
 ## Out of Scope
 
