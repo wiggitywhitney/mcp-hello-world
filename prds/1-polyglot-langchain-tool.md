@@ -224,3 +224,6 @@ Add a section pointing to the new tool and its documentation.
 | 2025-01-12 | Tested tool with formal greetings, non-Latin scripts, and edge cases |
 | 2025-01-12 | Fixed prompt to handle English "hello" correctly by adding example |
 | 2025-01-12 | All milestones complete - PRD finished |
+| 2025-01-12 | Migrated from deprecated `server.tool()` to `server.registerTool()` API |
+| 2025-01-12 | Updated model from claude-3-haiku to claude-haiku-4-5-20251001 |
+| 2025-01-12 | Improved prompt with multiple examples for better Haiku 4.5 language detection |

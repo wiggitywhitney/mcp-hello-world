@@ -82,7 +82,7 @@ function createServer(): McpServer {
         model: "claude-haiku-4-5-20251001",
       });
 
-      const prompt = `Given the greeting "${greeting}", reply with the word "world" in that language. One word only. Example: hello → world`;
+      const prompt = `Given the greeting "${greeting}", identify its language and reply with "world" translated into that same language. One word only. Examples: hello → world, bonjour → monde, hola → mundo`;
 
       try {
         const response = await model.invoke(prompt);
