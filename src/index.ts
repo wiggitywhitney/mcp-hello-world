@@ -35,11 +35,15 @@ function createServer(): McpServer {
   /**
    * The "hello" tool - a minimal example.
    * Takes no parameters, returns "world".
+   *
+   * Uses registerTool (the new API) instead of the deprecated tool() method.
+   * The config object groups description and inputSchema together.
    */
-  server.tool(
+  server.registerTool(
     "hello",
-    "A simple greeting tool. Call this tool to receive a 'world' response.",
-    {},
+    {
+      description: "A simple greeting tool. Call this tool to receive a 'world' response.",
+    },
     async () => {
       return {
         content: [{ type: "text" as const, text: "world" }],
@@ -52,16 +56,21 @@ function createServer(): McpServer {
    *
    * This is "Claude calling Claude": the host Claude calls this MCP tool,
    * which uses LangChain to call another Claude instance via the API.
+   *
+   * Uses registerTool with inputSchema to define parameters.
    */
-  server.tool(
+  server.registerTool(
     "polyglot",
-    "Responds to greetings in any language with 'world' in that same language. " +
-      "Send a greeting like 'hello', 'hola', 'bonjour', or 'こんにちは' and receive " +
-      "'world' translated into that language.",
     {
-      greeting: z
-        .string()
-        .describe("A greeting in any language, like 'hello', 'hola', or 'bonjour'"),
+      description:
+        "Responds to greetings in any language with 'world' in that same language. " +
+        "Send a greeting like 'hello', 'hola', 'bonjour', or 'こんにちは' and receive " +
+        "'world' translated into that language.",
+      inputSchema: {
+        greeting: z
+          .string()
+          .describe("A greeting in any language, like 'hello', 'hola', or 'bonjour'"),
+      },
     },
     async ({ greeting }) => {
       /**
