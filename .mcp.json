@@ -4,6 +4,14 @@
       "command": "teller",
       "args": ["run", "-s", "--", "node", "/Users/whitney.lee/Documents/Repositories/mcp-hello-world/dist/index.js"],
       "cwd": "/Users/whitney.lee/Documents/Repositories/mcp-hello-world"
+    },
+    "coderabbitai": {
+      "command": "teller",
+      "args": ["run", "-s", "--", "npx", "coderabbitai-mcp@latest"],
+      "cwd": "/Users/whitney.lee/Documents/Repositories/mcp-hello-world",
+      "env": {
+        "GITHUB_PAT": "${GITHUB_TOKEN}"
+      }
     }
   }
 }

@@ -8,3 +8,5 @@ providers:
         keys:
           # Anthropic API key for LangChain polyglot tool
           anthropic-api-key: ANTHROPIC_API_KEY
+          # GitHub token for CodeRabbit MCP server
+          github-token: GITHUB_TOKEN
