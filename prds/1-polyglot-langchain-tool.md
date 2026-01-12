@@ -212,3 +212,5 @@ Add a section pointing to the new tool and its documentation.
 | 2025-01-12 | Design decisions recorded: DD-1 (Zod documentation requirement), DD-2 (per-call ChatAnthropic instantiation) |
 | 2025-01-12 | Implemented polyglot tool with LangChain integration, Zod parameter validation, and error handling |
 | 2025-01-12 | Revised documentation to follow project guidelines (plain language, succinct, no assumptions) |
+| 2025-01-12 | Updated README with polyglot tool section and greetings table for testing |
+| 2025-01-12 | Verified tool appears in Claude after restart |
