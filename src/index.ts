@@ -74,8 +74,10 @@ function createServer(): McpServer {
     },
     async ({ greeting }) => {
       /**
-       * Create ChatAnthropic inside the handler (per-call) for clarity.
-       * In production you might reuse a single instance for efficiency.
+       * LANGCHAIN: Create ChatAnthropic instance.
+       * This is one of only two LangChain lines in this file.
+       *
+       * Created inside the handler (per-call) for clarity.
        * API key comes from ANTHROPIC_API_KEY env var (injected by Teller).
        */
       const model = new ChatAnthropic({
@@ -85,6 +87,7 @@ function createServer(): McpServer {
       const prompt = `Given the greeting "${greeting}", identify its language and reply with "world" translated into that same language. One word only. Examples: hello → world, bonjour → monde, hola → mundo`;
 
       try {
+        // LANGCHAIN: Call the model. This is the other LangChain line.
         const response = await model.invoke(prompt);
 
         // response.content can be string or array of content blocks

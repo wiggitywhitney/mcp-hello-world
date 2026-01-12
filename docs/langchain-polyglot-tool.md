@@ -4,17 +4,118 @@ This guide explains how to build an MCP tool that calls an external LLM using La
 
 ---
 
-## LangChain
+## What Parts Are Actually LangChain?
 
-LangChain is a framework for building LLM applications. It provides a consistent interface across AI providers.
+In this project, LangChain is just **two lines of code**:
 
-**Why use it instead of calling the API directly?**
+```typescript
+// Line 1: Create the model
+const model = new ChatAnthropic({ model: "claude-haiku-4-5-20251001" });
 
-- **Provider abstraction** - Switch from Claude to GPT by changing one line
-- **Consistent interface** - Same `.invoke()` method works across all providers
-- **Built-in patterns** - Chains, agents, memory ready to use
+// Line 2: Call the model
+const response = await model.invoke(prompt);
+```
 
-For simple tools, the direct API works fine. We use LangChain here because it's widely used in production and worth learning.
+Plus one import:
+
+```typescript
+import { ChatAnthropic } from "@langchain/anthropic";
+```
+
+That's it. Everything else (MCP server setup, Zod validation, response parsing) is not LangChain.
+
+---
+
+## LangChain vs. Anthropic SDK: A Comparison
+
+Here's what the polyglot tool looks like with LangChain vs. calling the Anthropic SDK directly.
+
+**With LangChain:**
+
+```typescript
+import { ChatAnthropic } from "@langchain/anthropic";
+
+const model = new ChatAnthropic({ model: "claude-haiku-4-5-20251001" });
+const response = await model.invoke(prompt);
+const text = response.content; // may need parsing
+```
+
+**With Anthropic SDK directly:**
+
+```typescript
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic(); // uses ANTHROPIC_API_KEY env var
+const response = await client.messages.create({
+  model: "claude-haiku-4-5-20251001",
+  max_tokens: 100,
+  messages: [{ role: "user", content: prompt }]
+});
+const text = response.content[0].text;
+```
+
+For this simple use case, both approaches are about the same complexity. The direct SDK is arguably clearer because there's no abstraction layer to learn.
+
+---
+
+## When Is LangChain Actually Useful?
+
+LangChain adds value when you need its built-in patterns. Here's a real example: a RAG (Retrieval-Augmented Generation) system that answers questions from your documents.
+
+**Without LangChain** you'd need to manually:
+1. Load and chunk documents
+2. Generate embeddings for each chunk
+3. Store embeddings in a vector database
+4. On each query: embed the question, search for similar chunks, build a prompt with context, call the LLM
+
+**With LangChain:**
+
+```typescript
+import { ChatAnthropic } from "@langchain/anthropic";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { AnthropicEmbeddings } from "@langchain/anthropic";
+import { createRetrievalChain } from "langchain/chains/retrieval";
+
+// Load and chunk documents
+const splitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
+const docs = await splitter.createDocuments([myDocumentText]);
+
+// Create vector store with embeddings
+const vectorStore = await MemoryVectorStore.fromDocuments(
+  docs,
+  new AnthropicEmbeddings()
+);
+
+// Create a retrieval chain
+const model = new ChatAnthropic({ model: "claude-sonnet-4-20250514" });
+const chain = await createRetrievalChain({
+  llm: model,
+  retriever: vectorStore.asRetriever(),
+});
+
+// Ask questions - LangChain handles retrieval + prompt building + LLM call
+const answer = await chain.invoke({ input: "What does the document say about X?" });
+```
+
+LangChain handles the orchestration: splitting, embedding, storing, retrieving, and prompting. That's a lot of boilerplate you don't have to write.
+
+**Other cases where LangChain helps:**
+- **Agents**: LLM decides which tools to call based on the task
+- **Memory**: Maintain conversation history across calls
+- **Chains**: Multi-step workflows (summarize → translate → format)
+- **Output parsers**: Structured JSON responses with validation
+
+**When to skip LangChain:**
+- Single API calls (like our polyglot tool)
+- When you want full control over prompts and responses
+- When debugging abstraction layers would slow you down
+
+---
+
+## LangChain in This Project
+
+We use LangChain here for learning exposure, not because it's necessary. The polyglot tool is simple enough that the direct SDK would work just as well.
 
 ---
 
