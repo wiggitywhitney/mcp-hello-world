@@ -25,7 +25,7 @@ The `hello` tool is intentionally simple - it's about understanding *how* MCP wo
 
 ## Project Structure
 
-```
+```text
 mcp-hello-world/
 ├── src/
 │   └── index.ts                      # The MCP server
@@ -124,7 +124,7 @@ The `polyglot` tool demonstrates how MCP tools can call external AI services usi
 
 **How it works:** Send a greeting in any language, get "world" back in that same language.
 
-```
+```text
 Input: "bonjour" → Output: "monde"
 Input: "hola" → Output: "mundo"
 ```

@@ -94,13 +94,13 @@ This implementation uses per-call because clarity matters more than micro-optimi
 
 The tool receives a greeting in any language and responds with "world" in that language.
 
-```
+```text
 Input: "bonjour" → Output: "monde"
 ```
 
 **Architecture:**
 
-```
+```text
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │  Claude (host)  │────▶│   MCP Server    │────▶│  Claude (LLM)   │
 │                 │◀────│  polyglot tool  │◀────│  via LangChain  │
