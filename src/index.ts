@@ -1,87 +1,104 @@
 /**
  * MCP Hello World Server
  *
- * This file creates an MCP (Model Context Protocol) server that Claude can connect to.
- * MCP is a standard way to give AI assistants access to external tools and data.
+ * Creates an MCP server that Claude can connect to. MCP (Model Context Protocol)
+ * is a standard way to give AI assistants access to external tools and data.
  *
- * How it works:
- * 1. We create a "server" that knows how to speak the MCP protocol
- * 2. We register "tools" that the server can offer to Claude
- * 3. We connect the server to a "transport" (the communication channel)
- * 4. Claude discovers our tools and can call them during conversations
- *
- * This server has one tool: "hello" - when called, it returns "world"
+ * This server has two tools:
+ * - "hello" - returns "world" (static example)
+ * - "polyglot" - returns "world" in the language of the input greeting (uses LangChain)
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 /**
- * LangChain imports for AI-powered tools.
- *
- * ChatAnthropic: The LangChain wrapper for Claude. It handles:
- * - API authentication (uses ANTHROPIC_API_KEY env var)
- * - Message formatting (converts LangChain messages to Anthropic format)
- * - Response parsing (converts Anthropic responses back to LangChain format)
- *
- * This import validates that our LangChain setup is working correctly.
- * The polyglot tool will use this to call Claude for language detection.
+ * Zod validates tool parameters. MCP uses it to check inputs before your handler runs.
+ */
+import { z } from "zod";
+
+/**
+ * ChatAnthropic is LangChain's wrapper for calling Claude.
+ * It handles API auth, message formatting, and response parsing.
  */
 import { ChatAnthropic } from "@langchain/anthropic";
 
 /**
- * Creates and configures the MCP server.
- *
- * The server is the central piece - it:
- * - Manages the list of available tools
- * - Handles incoming requests from Claude
- * - Routes tool calls to the right handler functions
+ * Creates and configures the MCP server with its tools.
  */
 function createServer(): McpServer {
-  /**
-   * Create a new MCP server instance.
-   *
-   * The configuration object tells Claude what this server is:
-   * - name: A unique identifier for this server
-   * - version: Helps track which version is running
-   */
   const server = new McpServer({
     name: "hello-world-server",
     version: "1.0.0",
   });
 
   /**
-   * Register the "hello" tool.
-   *
-   * A tool has three parts:
-   * 1. Name ("hello") - what Claude uses to call this tool
-   * 2. Description - helps Claude understand when to use this tool
-   * 3. Handler function - the code that runs when the tool is called
-   *
-   * The empty object {} means this tool takes no input parameters.
-   * Tools can accept parameters (like strings, numbers, etc.) but this one doesn't need any.
+   * The "hello" tool - a minimal example.
+   * Takes no parameters, returns "world".
    */
   server.tool(
     "hello",
     "A simple greeting tool. Call this tool to receive a 'world' response.",
     {},
     async () => {
-      /**
-       * This is the handler function - it runs when Claude calls the "hello" tool.
-       *
-       * The return value must follow MCP's response format:
-       * - content: An array of content blocks to return
-       * - type: "text" means we're returning plain text (could also be "image", etc.)
-       * - text: The actual response value
-       */
       return {
-        content: [
-          {
-            type: "text" as const,
-            text: "world",
-          },
-        ],
+        content: [{ type: "text" as const, text: "world" }],
       };
+    }
+  );
+
+  /**
+   * The "polyglot" tool - demonstrates MCP + LangChain integration.
+   *
+   * This is "Claude calling Claude": the host Claude calls this MCP tool,
+   * which uses LangChain to call another Claude instance via the API.
+   */
+  server.tool(
+    "polyglot",
+    "Responds to greetings in any language with 'world' in that same language. " +
+      "Send a greeting like 'hello', 'hola', 'bonjour', or 'こんにちは' and receive " +
+      "'world' translated into that language.",
+    {
+      greeting: z
+        .string()
+        .describe("A greeting in any language, like 'hello', 'hola', or 'bonjour'"),
+    },
+    async ({ greeting }) => {
+      /**
+       * Create ChatAnthropic inside the handler (per-call) for clarity.
+       * In production you might reuse a single instance for efficiency.
+       * API key comes from ANTHROPIC_API_KEY env var (injected by Teller).
+       */
+      const model = new ChatAnthropic({
+        model: "claude-3-haiku-20240307",
+      });
+
+      const prompt = `You receive a greeting in some language. Respond with ONLY the word "world" translated into that same language. No explanation, no punctuation, just the single word.
+
+Greeting: ${greeting}`;
+
+      try {
+        const response = await model.invoke(prompt);
+
+        // response.content can be string or array of content blocks
+        const responseText =
+          typeof response.content === "string"
+            ? response.content
+            : response.content
+                .filter((block): block is { type: "text"; text: string } => block.type === "text")
+                .map((block) => block.text)
+                .join("");
+
+        return {
+          content: [{ type: "text" as const, text: responseText.trim() }],
+        };
+      } catch (error) {
+        // Return error as text so Claude gets a useful message
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        return {
+          content: [{ type: "text" as const, text: `Error calling LLM: ${errorMessage}` }],
+        };
+      }
     }
   );
 
@@ -89,42 +106,19 @@ function createServer(): McpServer {
 }
 
 /**
- * Starts the MCP server and connects it to a transport.
- *
- * A "transport" is how the server communicates with Claude:
- * - StdioServerTransport: Uses standard input/output (stdin/stdout)
- *   This is the most common transport - Claude launches the server as a
- *   subprocess and sends/receives messages through the command line.
- *
- * Other transports exist (like HTTP) but stdio is the standard for local tools.
+ * Starts the MCP server using stdio transport.
+ * Stdio is the standard transport - Claude launches the server as a subprocess
+ * and communicates through stdin/stdout.
  */
 async function main(): Promise<void> {
   const server = createServer();
-
-  /**
-   * Create the stdio transport.
-   * This connects the server to stdin/stdout so Claude can communicate with it.
-   */
   const transport = new StdioServerTransport();
-
-  /**
-   * Connect the server to the transport and start listening.
-   * After this call, the server is running and waiting for requests from Claude.
-   */
   await server.connect(transport);
 
-  /**
-   * Log to stderr (not stdout!) that the server is running.
-   * We use stderr because stdout is reserved for MCP protocol messages.
-   * Logging to stdout would corrupt the protocol communication.
-   */
+  // Log to stderr because stdout is reserved for MCP protocol messages
   console.error("Hello World MCP server is running");
 }
 
-/**
- * Entry point - start the server.
- * The .catch() ensures any startup errors are logged before exiting.
- */
 main().catch((error) => {
   console.error("Failed to start server:", error);
   process.exit(1);
