@@ -1,9 +1,9 @@
 # PRD: Polyglot MCP Tool with LangChain
 
 **Issue**: #1
-**Status**: Draft
+**Status**: Complete
 **Created**: 2025-01-11
-**Last Updated**: 2025-01-11
+**Last Updated**: 2025-01-12
 
 ---
 
@@ -42,6 +42,16 @@ By studying this implementation, someone should understand:
 3. **Secrets Management**
    - Using Teller to inject API keys
    - Keeping secrets out of code
+
+4. **Zod for Parameter Validation**
+   - What Zod is and why MCP uses it for tool parameters
+   - Common Zod types (`z.string()`, `z.number()`, etc.)
+   - Using `.describe()` to document parameters for Claude
+
+5. **ChatAnthropic Instance Management**
+   - Creating instances inside handlers vs reusing across calls
+   - Trade-offs: clarity vs performance
+   - When to choose each approach
 
 ## User Journey
 
@@ -98,15 +108,21 @@ Run with: `teller run -- npm start`
 ### Tool Definition
 
 ```typescript
-server.tool(
+server.registerTool(
   "polyglot",
-  "Responds to greetings in any language with 'world' in that same language",
-  { greeting: z.string().describe("A greeting in any language") },
+  {
+    description: "Responds to greetings in any language with 'world' in that same language",
+    inputSchema: {
+      greeting: z.string().describe("A greeting in any language"),
+    },
+  },
   async ({ greeting }) => {
     // LangChain call to detect language and respond
   }
 );
 ```
+
+Note: Uses `registerTool` (the current API) instead of the deprecated `tool()` method.
 
 ## Success Criteria
 
@@ -117,12 +133,12 @@ server.tool(
 
 ## Milestones
 
-- [ ] LangChain dependencies installed and configured with Anthropic
-- [ ] `polyglot` tool implemented with LangChain integration
-- [ ] Teller secrets management configured for this project
-- [ ] Code documented with comprehensive doc strings
-- [ ] Standalone documentation created (`docs/langchain-polyglot-tool.md`)
-- [ ] Tool tested with various languages and greeting variations
+- [x] LangChain dependencies installed and configured with Anthropic
+- [x] `polyglot` tool implemented with LangChain integration
+- [x] Teller secrets management configured for this project
+- [x] Code documented with comprehensive doc strings
+- [x] Standalone documentation created (`docs/langchain-polyglot-tool.md`)
+- [x] Tool tested with various languages and greeting variations
 
 ## Documentation Deliverables
 
@@ -139,6 +155,16 @@ A learning-focused document covering:
 - The MCP + LangChain integration pattern
 - Step-by-step walkthrough of the `polyglot` tool
 - Key concepts for Anki card creation
+
+**Zod Documentation** (added per design decision):
+- What Zod is and why MCP uses it
+- Common Zod types with examples
+- The `.describe()` method for parameter documentation
+
+**ChatAnthropic Instance Placement** (added per design decision):
+- Per-call instantiation vs reused instance
+- Comparison table of trade-offs (clarity, performance, memory, configuration)
+- Recommendation: per-call for learning repos, reused for production
 
 ### 3. README Update
 Add a section pointing to the new tool and its documentation.
@@ -157,6 +183,22 @@ Add a section pointing to the new tool and its documentation.
 - Support for non-Anthropic LLM providers
 - Conversation memory (each call is stateless)
 
+---
+
+## Design Decisions
+
+### DD-1: Zod Documentation Requirement
+**Date**: 2025-01-12
+**Decision**: The standalone documentation must include comprehensive Zod coverage suitable for Anki card creation.
+**Rationale**: Zod is a foundational concept for MCP tool development. Understanding parameter validation helps learners build their own tools correctly.
+**Impact**: Added Zod section to Learning Objectives and Documentation Deliverables.
+
+### DD-2: ChatAnthropic Instance Placement
+**Date**: 2025-01-12
+**Decision**: Use per-call instantiation (inside handler) rather than reused instance.
+**Rationale**: For a learning repository, code clarity is more important than micro-optimization. Having everything in one place makes the code easier to follow and understand.
+**Impact**: Documentation covers both approaches with trade-offs, but implementation uses per-call pattern. Added to Learning Objectives.
+
 ## Dependencies
 
 - Existing `hello` tool must continue working
@@ -170,3 +212,18 @@ Add a section pointing to the new tool and its documentation.
 | Date | Update |
 |------|--------|
 | 2025-01-11 | PRD created |
+| 2025-01-12 | Installed @langchain/anthropic and @langchain/core; added ChatAnthropic import to src/index.ts; verified TypeScript build |
+| 2025-01-12 | Configured Teller secrets management (.teller.yml) to inject ANTHROPIC_API_KEY from Google Secrets Manager |
+| 2025-01-12 | Created standalone documentation (`docs/langchain-polyglot-tool.md`) with Zod and ChatAnthropic instance placement sections |
+| 2025-01-12 | Design decisions recorded: DD-1 (Zod documentation requirement), DD-2 (per-call ChatAnthropic instantiation) |
+| 2025-01-12 | Implemented polyglot tool with LangChain integration, Zod parameter validation, and error handling |
+| 2025-01-12 | Revised documentation to follow project guidelines (plain language, succinct, no assumptions) |
+| 2025-01-12 | Updated README with polyglot tool section and greetings table for testing |
+| 2025-01-12 | Verified tool appears in Claude after restart |
+| 2025-01-12 | Updated MCP config to use Teller with `-s` flag for secrets injection |
+| 2025-01-12 | Tested tool with formal greetings, non-Latin scripts, and edge cases |
+| 2025-01-12 | Fixed prompt to handle English "hello" correctly by adding example |
+| 2025-01-12 | All milestones complete - PRD finished |
+| 2025-01-12 | Migrated from deprecated `server.tool()` to `server.registerTool()` API |
+| 2025-01-12 | Updated model from claude-3-haiku to claude-haiku-4-5-20251001 |
+| 2025-01-12 | Improved prompt with multiple examples for better Haiku 4.5 language detection |

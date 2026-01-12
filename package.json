@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/wiggitywhitney/mcp-hello-world#readme",
   "dependencies": {
+    "@langchain/anthropic": "^1.3.7",
+    "@langchain/core": "^1.1.12",
     "@modelcontextprotocol/sdk": "^1.25.2"
   },
   "devDependencies": {
