@@ -73,9 +73,7 @@ function createServer(): McpServer {
         model: "claude-3-haiku-20240307",
       });
 
-      const prompt = `You receive a greeting in some language. Respond with ONLY the word "world" translated into that same language. No explanation, no punctuation, just the single word.
-
-Greeting: ${greeting}`;
+      const prompt = `Given the greeting "${greeting}", reply with the word "world" in that language. One word only. Example: hello → world`;
 
       try {
         const response = await model.invoke(prompt);

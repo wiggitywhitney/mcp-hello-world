@@ -1,7 +1,7 @@
 # PRD: Polyglot MCP Tool with LangChain
 
 **Issue**: #1
-**Status**: In Progress
+**Status**: Complete
 **Created**: 2025-01-11
 **Last Updated**: 2025-01-12
 
@@ -132,7 +132,7 @@ server.tool(
 - [x] Teller secrets management configured for this project
 - [x] Code documented with comprehensive doc strings
 - [x] Standalone documentation created (`docs/langchain-polyglot-tool.md`)
-- [ ] Tool tested with various languages and greeting variations
+- [x] Tool tested with various languages and greeting variations
 
 ## Documentation Deliverables
 
@@ -214,3 +214,7 @@ Add a section pointing to the new tool and its documentation.
 | 2025-01-12 | Revised documentation to follow project guidelines (plain language, succinct, no assumptions) |
 | 2025-01-12 | Updated README with polyglot tool section and greetings table for testing |
 | 2025-01-12 | Verified tool appears in Claude after restart |
+| 2025-01-12 | Updated MCP config to use Teller with `-s` flag for secrets injection |
+| 2025-01-12 | Tested tool with formal greetings, non-Latin scripts, and edge cases |
+| 2025-01-12 | Fixed prompt to handle English "hello" correctly by adding example |
+| 2025-01-12 | All milestones complete - PRD finished |
