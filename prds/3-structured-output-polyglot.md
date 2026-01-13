@@ -59,7 +59,7 @@ const polyglotSchema = z.object({
   languageFamily: z.string().describe("The language family (e.g., Romance, Germanic, Slavic)"),
 });
 
-const structuredModel = model.withStructuredOutput(polyglotSchema);
+const structuredModel = model.withStructuredOutput(polyglotSchema, { name: "PolyglotResponse" });
 const response = await structuredModel.invoke(prompt);
 // response is now typed and validated: { detectedLanguage, greeting, worldTranslation, languageFamily }
 ```

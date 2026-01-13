@@ -22,7 +22,7 @@ Structured output changes this. You define a schema describing what you want, an
 
 The polyglot tool originally returned a plain string:
 
-```
+```text
 "monde"
 ```
 

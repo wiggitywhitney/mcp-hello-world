@@ -76,6 +76,6 @@ This project uses Zod 4.3.5. There was an [open issue #8357](https://github.com/
 
 ## Official Documentation Sources
 
-- [ChatAnthropic API Reference](https://v03.api.js.langchain.com/classes/langchain_anthropic.ChatAnthropic.html)
+- [ChatAnthropic API Reference](https://v03.api.js.langchain.com/classes/_langchain_anthropic.index.ChatAnthropic.html)
 - [StructuredOutputMethodOptions Type](https://v03.api.js.langchain.com/types/_langchain_core.language_models_base.StructuredOutputMethodOptions.html)
 - [Structured Output Concepts](https://docs.langchain.com/oss/javascript/langchain/structured-output)
