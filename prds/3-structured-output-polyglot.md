@@ -52,14 +52,14 @@ When Claude calls the polyglot tool, it will receive structured data that it can
 ```typescript
 import { z } from "zod";
 
-const polyglotSchema = z.object({
+const polyglotResponseSchema = z.object({
   detectedLanguage: z.string().describe("The language of the input greeting"),
   greeting: z.string().describe("The original greeting that was provided"),
   worldTranslation: z.string().describe("The word 'world' in the detected language"),
   languageFamily: z.string().describe("The language family (e.g., Romance, Germanic, Slavic)"),
 });
 
-const structuredModel = model.withStructuredOutput(polyglotSchema, { name: "PolyglotResponse" });
+const structuredModel = model.withStructuredOutput(polyglotResponseSchema, { name: "PolyglotResponse" });
 const response = await structuredModel.invoke(prompt);
 // response is now typed and validated: { detectedLanguage, greeting, worldTranslation, languageFamily }
 ```
