@@ -1,6 +1,6 @@
 # PRD #3: Structured Output for Polyglot Tool
 
-**Status**: In Progress
+**Status**: Complete
 **Created**: 2026-01-12
 **GitHub Issue**: [#3](https://github.com/wiggitywhitney/mcp-hello-world/issues/3)
 
@@ -83,9 +83,9 @@ LangChain's `.withStructuredOutput()`:
 - [x] Polyglot tool returns structured JSON instead of plain string
 - [x] Response includes: detectedLanguage, greeting, worldTranslation, languageFamily
 - [x] Zod schema validates the LLM response
-- [ ] Documentation updated to explain the structured output pattern
+- [x] Documentation updated to explain the structured output pattern
 - [x] Existing greeting tests still work (verify with manual testing)
-- [ ] New standalone learning document created (`docs/structured-output.md`) covering the new concepts
+- [x] New standalone learning document created (`docs/structured-output.md`) covering the new concepts
 
 ## Milestones
 
@@ -106,7 +106,7 @@ LangChain's `.withStructuredOutput()`:
   - **Reference**: See research file for expected response shape
   - **Key requirement**: Return JSON string of the structured response
 
-- [ ] **M5**: Create new standalone learning document (`docs/structured-output.md`) - plain language, succinct, no overlap with existing docs
+- [x] **M5**: Create new standalone learning document (`docs/structured-output.md`) - plain language, succinct, no overlap with existing docs
   - **Reference**: Use `docs/research/prd-3-structured-output.md` as source material, but rewrite for learners
 
 - [x] **M6**: Manual testing with various greetings to verify structured responses
@@ -171,3 +171,10 @@ The new `docs/structured-output.md` must:
   - Latin (salve) → Italic family, "mundus"
 - All responses return correct structured JSON with all 4 fields
 - Language detection accurate across Latin, Cyrillic, and Japanese scripts
+
+### 2026-01-13: M5 Complete - Learning Document
+- Created `docs/structured-output.md` as standalone learning guide
+- Covers: what structured output does, before/after example, the pattern, key gotcha (name parameter), how .describe() guides LLM
+- Assumes reader has completed `docs/langchain-polyglot-tool.md` (no overlap)
+- Plain language, ~100 lines, focused on structured output concepts only
+- **PRD #3 Complete** - All milestones and success criteria achieved
