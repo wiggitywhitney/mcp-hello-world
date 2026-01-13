@@ -98,11 +98,11 @@ LangChain's `.withStructuredOutput()`:
   - **Reference**: See "Usage Pattern" in `docs/research/prd-3-structured-output.md`
   - **Key requirement**: Use `.describe()` on each field to guide the LLM
 
-- [ ] **M3**: Implement `.withStructuredOutput()` in polyglot handler
+- [x] **M3**: Implement `.withStructuredOutput()` in polyglot handler
   - **Reference**: See "Method Signature" and "Critical Best Practice" in `docs/research/prd-3-structured-output.md`
   - **Key requirement**: Always pass `{ name: "PolyglotResponse" }` as second argument
 
-- [ ] **M4**: Update MCP tool response to return formatted structured data
+- [x] **M4**: Update MCP tool response to return formatted structured data
   - **Reference**: See research file for expected response shape
   - **Key requirement**: Return JSON string of the structured response
 
@@ -153,3 +153,10 @@ The new `docs/structured-output.md` must:
 - Each field uses `.describe()` to guide the LLM on expected content
 - Added `PolyglotResponse` TypeScript type inferred from schema
 - Build passes successfully
+
+### 2026-01-13: M3 & M4 Complete - Structured Output Implementation
+- Added `model.withStructuredOutput(polyglotResponseSchema, { name: "PolyglotResponse" })`
+- Updated prompt to guide structured extraction (language, family, translation)
+- Replaced text extraction logic with direct structured response
+- Response now returns formatted JSON via `JSON.stringify(response, null, 2)`
+- Build compiles successfully

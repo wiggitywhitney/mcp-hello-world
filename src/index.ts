@@ -97,33 +97,43 @@ function createServer(): McpServer {
     },
     async ({ greeting }) => {
       /**
-       * LANGCHAIN: Create ChatAnthropic instance.
-       * This is one of only two LangChain lines in this file.
+       * LANGCHAIN: Create ChatAnthropic instance and configure for structured output.
        *
-       * Created inside the handler (per-call) for clarity.
-       * API key comes from ANTHROPIC_API_KEY env var (injected by Teller).
+       * withStructuredOutput() wraps the model to return validated, typed data
+       * instead of raw text. The Zod schema (defined at top of file) tells the
+       * LLM what fields to return, and LangChain validates the response.
+       *
+       * We must pass { name: "PolyglotResponse" } because Zod can't infer schema
+       * names - without this, the model won't know what to call the output structure.
        */
       const model = new ChatAnthropic({
         model: "claude-haiku-4-5-20251001",
       });
 
-      const prompt = `Given the greeting "${greeting}", identify its language and reply with "world" translated into that same language. One word only. Examples: hello → world, bonjour → monde, hola → mundo`;
+      const structuredModel = model.withStructuredOutput(polyglotResponseSchema, {
+        name: "PolyglotResponse",
+      });
+
+      const prompt = `Analyze this greeting: "${greeting}"
+
+Determine:
+1. What language is this greeting from?
+2. What language family does it belong to (e.g., Romance, Germanic, Slavic, Japonic)?
+3. How do you say "world" in that language?`;
 
       try {
-        // LANGCHAIN: Call the model. This is the other LangChain line.
-        const response = await model.invoke(prompt);
+        /**
+         * LANGCHAIN: Call the structured model.
+         *
+         * Unlike regular invoke() which returns raw message content,
+         * structuredModel.invoke() returns a validated object matching
+         * our Zod schema. No parsing or extraction needed.
+         */
+        const response = await structuredModel.invoke(prompt);
 
-        // response.content can be string or array of content blocks
-        const responseText =
-          typeof response.content === "string"
-            ? response.content
-            : response.content
-                .filter((block): block is { type: "text"; text: string } => block.type === "text")
-                .map((block) => block.text)
-                .join("");
-
+        // response is typed as PolyglotResponse - return as formatted JSON
         return {
-          content: [{ type: "text" as const, text: responseText.trim() }],
+          content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
         };
       } catch (error) {
         // Return error as text so Claude gets a useful message
