@@ -24,6 +24,29 @@ import { z } from "zod";
 import { ChatAnthropic } from "@langchain/anthropic";
 
 /**
+ * Schema for the polyglot tool's structured response.
+ *
+ * This defines what the LLM should return when processing a greeting.
+ * Each .describe() tells the LLM what to put in that field - this is how
+ * structured output knows what data to extract.
+ *
+ * Used with LangChain's .withStructuredOutput() to get typed, validated responses
+ * instead of parsing raw text.
+ */
+const polyglotResponseSchema = z.object({
+  detectedLanguage: z.string().describe("The language of the input greeting (e.g., 'French', 'Spanish', 'Japanese')"),
+  greeting: z.string().describe("The original greeting that was provided"),
+  worldTranslation: z.string().describe("The word 'world' translated into the detected language"),
+  languageFamily: z.string().describe("The language family (e.g., 'Romance', 'Germanic', 'Slavic', 'Japonic')"),
+});
+
+/**
+ * TypeScript type inferred from the schema.
+ * Use this when you need to type variables holding the structured response.
+ */
+type PolyglotResponse = z.infer<typeof polyglotResponseSchema>;
+
+/**
  * Creates and configures the MCP server with its tools.
  */
 function createServer(): McpServer {
@@ -74,33 +97,43 @@ function createServer(): McpServer {
     },
     async ({ greeting }) => {
       /**
-       * LANGCHAIN: Create ChatAnthropic instance.
-       * This is one of only two LangChain lines in this file.
+       * LANGCHAIN: Create ChatAnthropic instance and configure for structured output.
        *
-       * Created inside the handler (per-call) for clarity.
-       * API key comes from ANTHROPIC_API_KEY env var (injected by Teller).
+       * withStructuredOutput() wraps the model to return validated, typed data
+       * instead of raw text. The Zod schema (defined at top of file) tells the
+       * LLM what fields to return, and LangChain validates the response.
+       *
+       * We must pass { name: "PolyglotResponse" } because Zod can't infer schema
+       * names - without this, the model won't know what to call the output structure.
        */
       const model = new ChatAnthropic({
         model: "claude-haiku-4-5-20251001",
       });
 
-      const prompt = `Given the greeting "${greeting}", identify its language and reply with "world" translated into that same language. One word only. Examples: hello → world, bonjour → monde, hola → mundo`;
+      const structuredModel = model.withStructuredOutput(polyglotResponseSchema, {
+        name: "PolyglotResponse",
+      });
+
+      const prompt = `Analyze this greeting: "${greeting}"
+
+Determine:
+1. What language is this greeting from?
+2. What language family does it belong to (e.g., Romance, Germanic, Slavic, Japonic)?
+3. How do you say "world" in that language?`;
 
       try {
-        // LANGCHAIN: Call the model. This is the other LangChain line.
-        const response = await model.invoke(prompt);
+        /**
+         * LANGCHAIN: Call the structured model.
+         *
+         * Unlike regular invoke() which returns raw message content,
+         * structuredModel.invoke() returns a validated object matching
+         * our Zod schema. No parsing or extraction needed.
+         */
+        const response = await structuredModel.invoke(prompt);
 
-        // response.content can be string or array of content blocks
-        const responseText =
-          typeof response.content === "string"
-            ? response.content
-            : response.content
-                .filter((block): block is { type: "text"; text: string } => block.type === "text")
-                .map((block) => block.text)
-                .join("");
-
+        // response is typed as PolyglotResponse - return as formatted JSON
         return {
-          content: [{ type: "text" as const, text: responseText.trim() }],
+          content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
         };
       } catch (error) {
         // Return error as text so Claude gets a useful message
