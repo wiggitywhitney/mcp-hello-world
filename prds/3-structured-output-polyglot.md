@@ -1,6 +1,6 @@
 # PRD #3: Structured Output for Polyglot Tool
 
-**Status**: Not Started
+**Status**: In Progress
 **Created**: 2026-01-12
 **GitHub Issue**: [#3](https://github.com/wiggitywhitney/mcp-hello-world/issues/3)
 
@@ -89,11 +89,26 @@ LangChain's `.withStructuredOutput()`:
 
 ## Milestones
 
-- [ ] **M1**: Research latest LangChain structured output documentation and best practices (avoid outdated patterns)
+> **IMPORTANT**: Before starting any milestone, read `docs/research/prd-3-structured-output.md` for current LangChain patterns and best practices. Do not rely on training data—use the researched documentation.
+
+- [x] **M1**: Research latest LangChain structured output documentation and best practices (avoid outdated patterns)
+  - **Output**: `docs/research/prd-3-structured-output.md`
+
 - [ ] **M2**: Define Zod schema for structured polyglot response
+  - **Reference**: See "Usage Pattern" in `docs/research/prd-3-structured-output.md`
+  - **Key requirement**: Use `.describe()` on each field to guide the LLM
+
 - [ ] **M3**: Implement `.withStructuredOutput()` in polyglot handler
+  - **Reference**: See "Method Signature" and "Critical Best Practice" in `docs/research/prd-3-structured-output.md`
+  - **Key requirement**: Always pass `{ name: "PolyglotResponse" }` as second argument
+
 - [ ] **M4**: Update MCP tool response to return formatted structured data
+  - **Reference**: See research file for expected response shape
+  - **Key requirement**: Return JSON string of the structured response
+
 - [ ] **M5**: Create new standalone learning document (`docs/structured-output.md`) - plain language, succinct, no overlap with existing docs
+  - **Reference**: Use `docs/research/prd-3-structured-output.md` as source material, but rewrite for learners
+
 - [ ] **M6**: Manual testing with various greetings to verify structured responses
 
 ## Learning Document Requirements
@@ -118,10 +133,17 @@ The new `docs/structured-output.md` must:
 
 ## Design Decisions
 
-*(To be filled in during implementation)*
+- **Research-first approach**: All implementation work must reference `docs/research/prd-3-structured-output.md` rather than relying on AI training data, which may contain outdated LangChain patterns.
+- **Always provide schema name**: Zod cannot infer schema names, so we must always pass `{ name: "PolyglotResponse" }` to `withStructuredOutput()`.
+- **Zod v4 compatible**: Project uses Zod 4.3.5, which is compatible with current LangChain packages.
 
 ---
 
 ## Progress Log
 
-*(To be filled in during implementation)*
+### 2026-01-13: M1 Complete - Research
+- Researched current LangChain structured output documentation from official sources
+- Confirmed `withStructuredOutput()` is the correct approach
+- Documented findings in `docs/research/prd-3-structured-output.md`
+- Key finding: Must always provide `{ name: "SchemaName" }` because Zod can't infer names
+- Verified Zod v4 compatibility with current LangChain packages
