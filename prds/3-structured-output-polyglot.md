@@ -80,11 +80,11 @@ LangChain's `.withStructuredOutput()`:
 
 ## Success Criteria
 
-- [ ] Polyglot tool returns structured JSON instead of plain string
-- [ ] Response includes: detectedLanguage, greeting, worldTranslation, languageFamily
-- [ ] Zod schema validates the LLM response
+- [x] Polyglot tool returns structured JSON instead of plain string
+- [x] Response includes: detectedLanguage, greeting, worldTranslation, languageFamily
+- [x] Zod schema validates the LLM response
 - [ ] Documentation updated to explain the structured output pattern
-- [ ] Existing greeting tests still work (verify with manual testing)
+- [x] Existing greeting tests still work (verify with manual testing)
 - [ ] New standalone learning document created (`docs/structured-output.md`) covering the new concepts
 
 ## Milestones
@@ -109,7 +109,7 @@ LangChain's `.withStructuredOutput()`:
 - [ ] **M5**: Create new standalone learning document (`docs/structured-output.md`) - plain language, succinct, no overlap with existing docs
   - **Reference**: Use `docs/research/prd-3-structured-output.md` as source material, but rewrite for learners
 
-- [ ] **M6**: Manual testing with various greetings to verify structured responses
+- [x] **M6**: Manual testing with various greetings to verify structured responses
 
 ## Learning Document Requirements
 
@@ -160,3 +160,14 @@ The new `docs/structured-output.md` must:
 - Replaced text extraction logic with direct structured response
 - Response now returns formatted JSON via `JSON.stringify(response, null, 2)`
 - Build compiles successfully
+
+### 2026-01-13: M6 Complete - Manual Testing
+- Tested 6 greetings across multiple language families:
+  - French (bonjour) → Romance family, "monde"
+  - Spanish (hola) → Romance family, "mundo"
+  - Japanese (こんにちは) → Japonic family, "世界"
+  - German (guten tag) → Germanic family, "Welt"
+  - Russian (привет) → Slavic family, "мир"
+  - Latin (salve) → Italic family, "mundus"
+- All responses return correct structured JSON with all 4 fields
+- Language detection accurate across Latin, Cyrillic, and Japanese scripts
