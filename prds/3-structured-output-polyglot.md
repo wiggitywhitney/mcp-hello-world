@@ -94,7 +94,7 @@ LangChain's `.withStructuredOutput()`:
 - [x] **M1**: Research latest LangChain structured output documentation and best practices (avoid outdated patterns)
   - **Output**: `docs/research/prd-3-structured-output.md`
 
-- [ ] **M2**: Define Zod schema for structured polyglot response
+- [x] **M2**: Define Zod schema for structured polyglot response
   - **Reference**: See "Usage Pattern" in `docs/research/prd-3-structured-output.md`
   - **Key requirement**: Use `.describe()` on each field to guide the LLM
 
@@ -147,3 +147,9 @@ The new `docs/structured-output.md` must:
 - Documented findings in `docs/research/prd-3-structured-output.md`
 - Key finding: Must always provide `{ name: "SchemaName" }` because Zod can't infer names
 - Verified Zod v4 compatibility with current LangChain packages
+
+### 2026-01-13: M2 Complete - Zod Schema
+- Added `polyglotResponseSchema` to `src/index.ts` with all 4 fields
+- Each field uses `.describe()` to guide the LLM on expected content
+- Added `PolyglotResponse` TypeScript type inferred from schema
+- Build passes successfully

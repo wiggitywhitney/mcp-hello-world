@@ -24,6 +24,29 @@ import { z } from "zod";
 import { ChatAnthropic } from "@langchain/anthropic";
 
 /**
+ * Schema for the polyglot tool's structured response.
+ *
+ * This defines what the LLM should return when processing a greeting.
+ * Each .describe() tells the LLM what to put in that field - this is how
+ * structured output knows what data to extract.
+ *
+ * Used with LangChain's .withStructuredOutput() to get typed, validated responses
+ * instead of parsing raw text.
+ */
+const polyglotResponseSchema = z.object({
+  detectedLanguage: z.string().describe("The language of the input greeting (e.g., 'French', 'Spanish', 'Japanese')"),
+  greeting: z.string().describe("The original greeting that was provided"),
+  worldTranslation: z.string().describe("The word 'world' translated into the detected language"),
+  languageFamily: z.string().describe("The language family (e.g., 'Romance', 'Germanic', 'Slavic', 'Japonic')"),
+});
+
+/**
+ * TypeScript type inferred from the schema.
+ * Use this when you need to type variables holding the structured response.
+ */
+type PolyglotResponse = z.infer<typeof polyglotResponseSchema>;
+
+/**
  * Creates and configures the MCP server with its tools.
  */
 function createServer(): McpServer {
