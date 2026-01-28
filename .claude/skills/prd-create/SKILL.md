@@ -2,6 +2,7 @@
 name: prd-create
 description: Create documentation-first PRDs that guide development through user-facing content
 category: project-management
+disable-model-invocation: true
 ---
 
 # PRD Creation Slash Command
@@ -11,7 +12,7 @@ category: project-management
 You are helping create a Product Requirements Document (PRD) for a new feature. This process involves two main components:
 
 1. **GitHub Issue**: Short, immutable concept description that links to the detailed PRD
-2. **PRD File**: Project management document with milestone tracking, progress logs, and implementation plan
+2. **PRD File**: Project management document with milestone tracking and implementation plan
 
 ## Process
 

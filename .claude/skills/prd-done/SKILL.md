@@ -2,6 +2,7 @@
 name: prd-done
 description: Complete PRD implementation workflow - create branch, push changes, create PR, merge, and close issue
 category: project-management
+disable-model-invocation: true
 ---
 
 # Complete PRD Implementation
@@ -34,11 +35,10 @@ Complete the PRD implementation workflow including branch management, pull reque
 - [ ] **Documentation updated**: All user-facing docs reflect implemented functionality
 - [ ] **No outstanding blockers**: All dependencies resolved and technical debt addressed
 - [ ] **Update PRD status**: Mark PRD as "Complete" with completion date
+- [ ] **Archive PRD file**: Move completed PRD to `./prds/done/` directory to maintain project organization
 - [ ] **Update ROADMAP.md (if it exists)**: Remove the completed feature from `docs/ROADMAP.md` roadmap if the file exists
 
 **Note**: Tests will run automatically in the CI/CD pipeline when the PR is created. Do not run tests locally during the completion workflow.
-
-**⚠️ IMPORTANT**: Do NOT archive the PRD yet! Archiving happens AFTER the PR is merged (Step 5).
 
 ### 2. Branch and Commit Management
 
@@ -320,13 +320,11 @@ Closes #[issue-id]
 - [ ] **Verify deployment**: Ensure feature works in production environment
 - [ ] **Monitor for issues**: Watch for any post-deployment problems
 
-### 5. Post-Merge: Archive PRD and Close Issue
-- [ ] **Archive PRD file**: Move completed PRD to `./prds/done/` directory
-  - `mv prds/[prd-file].md prds/done/`
-  - Commit with `[skip ci]` flag (housekeeping only)
-  - Push to main
-- [ ] **Close GitHub issue**: Add final completion comment and close (may already be closed if PR used "Closes #X")
+### 5. Issue Closure
+- [ ] **Update issue PRD link**: Update the GitHub issue description to reference the new PRD path in `./prds/done/` directory
+- [ ] **Close GitHub issue**: Add final completion comment and close
 - [ ] **Archive artifacts**: Save any temporary files or testing data if needed
+- [ ] **Team notification**: Announce feature completion to relevant stakeholders
 
 ### 6. Branch Cleanup
 - [ ] **Switch to main branch**: `git checkout main`

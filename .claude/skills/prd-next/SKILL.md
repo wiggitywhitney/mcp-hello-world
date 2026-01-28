@@ -2,6 +2,7 @@
 name: prd-next
 description: Analyze existing PRD to identify and recommend the single highest-priority task to work on next
 category: project-management
+disable-model-invocation: true
 ---
 
 # PRD Next - Work On the Next Task

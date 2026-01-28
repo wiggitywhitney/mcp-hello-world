@@ -2,6 +2,7 @@
 name: prd-close
 description: Close a PRD that is already implemented or no longer needed
 category: project-management
+disable-model-invocation: true
 ---
 
 # Close PRD

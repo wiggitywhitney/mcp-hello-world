@@ -6,6 +6,7 @@ arguments:
   - name: prdNumber
     description: PRD number to start working on (e.g., 306)
     required: false
+disable-model-invocation: true
 ---
 
 # PRD Start - Begin Implementation Work
